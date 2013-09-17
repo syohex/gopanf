@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"github.com/mgutz/ansi"
 	flag "github.com/ogier/pflag"
 	"io/ioutil"
 	"log"
@@ -24,9 +25,11 @@ const metacpanRSS = `https://metacpan.org/feed/recent?f=`
 
 func main() {
 	var showDesc bool
+	var color bool
 
 	limit := flag.IntP("limit", "l", 30, "limit of modules")
 	flag.BoolVarP(&showDesc, "desc", "d", false, "Show description")
+	flag.BoolVarP(&color, "color", "c", false, "Show description")
 	flag.Parse()
 
 	response, err := http.Get(metacpanRSS)
@@ -49,7 +52,14 @@ func main() {
 	}
 
 	for _, item := range rss.Item[0:*limit] {
-		fmt.Printf("%s(%s)", item.Title, item.Creator)
+		if color {
+			fmt.Printf("%s(%s)",
+				ansi.Color(item.Title, "green+b"),
+				ansi.Color(item.Creator, "yellow+b"))
+		} else {
+			fmt.Printf("%s(%s)", item.Title, item.Creator)
+		}
+
 		if showDesc {
 			fmt.Printf(":\n    %s\n", item.Description)
 		} else {
