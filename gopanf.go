@@ -53,11 +53,11 @@ func main() {
 
 	for _, item := range rss.Item[0:*limit] {
 		if color {
-			fmt.Printf("%s(%s)",
+			fmt.Printf("%s (%s)",
 				ansi.Color(item.Title, "green+b"),
 				ansi.Color(item.Creator, "yellow+b"))
 		} else {
-			fmt.Printf("%s(%s)", item.Title, item.Creator)
+			fmt.Printf("%s (%s)", item.Title, item.Creator)
 		}
 
 		if showDesc {
